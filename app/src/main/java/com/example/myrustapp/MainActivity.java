@@ -20,5 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Example of a call to a native method
         TextView tv = binding.sampleText;
+        tv.setText(RustBindings.greeting("Android world"));
     }
 }
