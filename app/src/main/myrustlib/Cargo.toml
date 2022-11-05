@@ -1,0 +1,12 @@
+[package]
+name = "myrustlib"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+
+[target.'cfg(target_os="android")'.dependencies]
+jni = "0.19.0"
