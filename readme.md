@@ -27,6 +27,12 @@ Uses [rust-android-gradle](https://github.com/mozilla/rust-android-gradle) plugi
 ```cli
 gradlew cargoBuild
 ```
+> Set `JAVA_HOME` environment variable
+> ```
+> Windows:  set JAVA_HOME="C:\Program Files\Android\Android Studio\jre"
+> macOS:    export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jre/Contents/Home/
+> Linux:    (needn't to anything, using the system settings.)
+> ```
 
 ### Function naming convention
 
