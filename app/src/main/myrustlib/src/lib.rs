@@ -6,6 +6,7 @@ pub fn inner_rust_greeting(to: &str) -> String {
 }
 
 /// # Safety
+/// This function is for cross-language and cross-platform use.
 #[no_mangle]
 pub unsafe extern "C" fn rust_greeting(to: *const c_char) -> *mut c_char {
     let c_str = CStr::from_ptr(to);
@@ -20,6 +21,8 @@ pub unsafe extern "C" fn rust_greeting(to: *const c_char) -> *mut c_char {
 }
 
 /// # Safety
+/// This function is for free memory allocated by `rust_greeting`.
+/// and is for cross-language and cross-platform use.
 #[no_mangle]
 pub unsafe extern "C" fn rust_greeting_free(s: *mut c_char) {
     if s.is_null() {
@@ -31,22 +34,20 @@ pub unsafe extern "C" fn rust_greeting_free(s: *mut c_char) {
 #[cfg(target_os = "android")]
 #[allow(non_snake_case)]
 pub mod android {
-    extern crate jni;
-
-    use self::jni::objects::{JClass, JString};
-    use self::jni::sys::jstring;
-    use self::jni::JNIEnv;
     use super::*;
+    use ::jni::objects::{JClass, JString};
+    use ::jni::sys::jstring;
+    use ::jni::JNIEnv;
 
     #[no_mangle]
     pub unsafe extern "C" fn Java_com_example_myrustapp_RustBindings_greeting(
-        env: JNIEnv,
+        mut env: JNIEnv,
         _: JClass,
         java_pattern: JString,
     ) -> jstring {
         // Our Java companion code might pass-in "world" as a string, hence the name.
         let world = rust_greeting(
-            env.get_string(java_pattern)
+            env.get_string(&java_pattern)
                 .expect("invalid pattern string")
                 .as_ptr(),
         );
@@ -56,6 +57,6 @@ pub mod android {
             .expect("Couldn't create java string!");
         rust_greeting_free(world);
 
-        output.into_inner()
+        output.into_raw()
     }
 }
